@@ -35,10 +35,6 @@
 
   </api:info>
 
-  <rsb:set attr="ProjectRequest.ElementMapPath#1" value="/access_token" />
-  <rsb:set attr="ProjectRequest.ElementMapName#1" value="access_token" />
-  <rsb:set attr="ProjectRequest.RepeatElement" value="/"/>
-
   <api:set attr="uri" value="[rows@next | def()]" />
   <api:set attr="enablepaging" value="TRUE" />
 

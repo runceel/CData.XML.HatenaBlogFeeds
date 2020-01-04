@@ -1,0 +1,61 @@
+<api:script xmlns:api="http://apiscript.com/ns?v1" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- See Column Definitions to specify column behavior and use XPaths to extract column values from XML. -->
+  <api:info title="HatenaBlogFeeds" desc="Generated schema file." xmlns:other="http://apiscript.com/ns?v1">
+    <!-- You can modify the name, type, and column size here.  The name must match the values in the api:script block below -->
+
+    <attr name="Id"                      xs:type="string"   key="true"     readonly="true"                                other:xPath="entry/id"                       />
+    <attr name="Title"                   xs:type="string"                  readonly="true"                                other:xPath="entry/title"                    />
+    <attr name="Summary"                 xs:type="string"                  readonly="true"                                other:xPath="entry/summary"                  />
+    <attr name="SummaryType"             xs:type="string"                  readonly="true"                                other:xPath="entry/summary@type"             />
+    <attr name="AuthorName"              xs:type="string"                  readonly="true"                                other:xPath="entry/author/name"              />
+    <attr name="Published"               xs:type="datetime"                readonly="true"                                other:xPath="entry/published"                />
+    <attr name="Updated"                 xs:type="datetime"                readonly="true"                                other:xPath="entry/updated"                  />
+    <attr name="Edited"                  xs:type="datetime"                readonly="true"                                other:xPath="entry/edited"                   />
+    <attr name="CategoryTerm"            xs:type="string"                  readonly="true"  other:valueFormat="delimited" other:xPath="entry/category@term"            />
+
+    <attr name="Content"                 xs:type="string"                  readonly="true"                                other:xPath="entry/content"                  />
+    <attr name="ContentType"             xs:type="string"                  readonly="true"                                other:xPath="entry/content@type"             />
+    <attr name="ControlDraft"            xs:type="string"                  readonly="true"                                other:xPath="entry/control/draft"            />
+
+    <attr name="Formatted-content"       xs:type="string"                  readonly="true"                                other:xPath="entry/formatted-content"        />
+    <attr name="Formatted-contentHatena" xs:type="string"                  readonly="true"                                other:xPath="entry/formatted-content@hatena" />
+    <attr name="Formatted-contentType"   xs:type="string"                  readonly="true"                                other:xPath="entry/formatted-content@type"   />
+
+    <attr name="LinkHref"                xs:type="string"                  readonly="true"   other:xPath="entry/link[1]@href"                />
+    <attr name="LinkType"                xs:type="string"                  readonly="true"   other:xPath="entry/link[1]@type"                />
+
+    <attr name="FeedAuthorName"          xs:type="string"                  readonly="true"                                other:xPath="author/name"                    />
+    <attr name="FeedId"                  xs:type="string"                  readonly="true"                                other:xPath="id"                             />
+    <attr name="FeedLinkHref"            xs:type="string"                  readonly="true"  other:xPath="link[1]@href"                      />
+    <attr name="FeedLinkRel"             xs:type="string"                  readonly="true"  other:xPath="link[1]@rel"                       />
+    <attr name="FeedSubtitle"            xs:type="string"                  readonly="true"                                other:xPath="subtitle"                       />
+    <attr name="FeedTitle"               xs:type="string"                  readonly="true"                                other:xPath="title"                          />
+    <attr name="FeedUpdated"             xs:type="datetime"                readonly="true"                                other:xPath="updated"                        />
+
+  </api:info>
+
+  <rsb:set attr="ProjectRequest.ElementMapPath#1" value="/access_token" />
+  <rsb:set attr="ProjectRequest.ElementMapName#1" value="access_token" />
+  <rsb:set attr="ProjectRequest.RepeatElement" value="/"/>
+
+  <api:set attr="uri" value="[rows@next | def()]" />
+  <api:set attr="enablepaging" value="TRUE" />
+
+  <api:set attr="DataModel" value="FlattenedDocuments" />
+  <api:set attr="PushAttributes" value="false" />
+  <api:set attr="XPath" value="/feed;/feed/entry" />
+
+  <!-- The GET method corresponds to SELECT. -->
+  <api:script method="GET">
+    <api:call op="xmlproviderGet" out="response">
+        
+        <api:if attr="response.FeedLinkRel" value="next" operator="equals">
+          <api:else>
+          </api:else>
+          <rsb:set attr="rows@next" value="[response.FeedLinkHref]" />
+        </api:if>
+      <api:push/>
+    </api:call>
+  </api:script>
+</api:script>
